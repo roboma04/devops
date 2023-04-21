@@ -1,3 +1,4 @@
+1.
 name: For every push
 on: push
 jobs:
@@ -5,3 +6,172 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - run: echo "Success!"
+
+2.
+name: Multiple Events
+on: [push, issues]
+jobs:
+  lesson2:
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo "Success!"
+
+3.
+name: Pull Requests to master
+on:
+  pull_request:
+    branches:
+          - master
+jobs:
+  say-hello:
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo "Success!"
+
+4.
+name: Issues
+
+on:
+  issues:
+      types: [opened, labeled]
+jobs:
+  label-issues:
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo "Success!"
+
+
+5.
+name: Optimize images
+
+on:
+  push:
+    paths:
+        - './photos/*.jpg'
+  jobs:
+  optimize-images:
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo "Success!"
+
+
+6.
+name: Deploy
+
+on: [push]
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    steps:
+        - run: ./scriptDeploy.sh
+
+
+7.
+name: Checkout
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: ./build.sh
+
+
+8.
+name: Windows
+
+on: push
+
+jobs:
+  say-hello:
+      runs-on: windows-latest
+  steps:
+    - run: echo "Success!"
+
+
+9.
+name: Checkout
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Build
+      run: ./build.sh
+
+    - name: Deploy
+      env:
+        DEPLOYMENT_KEY: ${{ secrets.DEPLOYMENT_KEY }}
+      run: ./deploy --cloud-token=$DEPLOYMENT_KEY
+
+
+10.
+name: Skip job
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: ./build.sh
+  deploy:
+    needs: [build]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/production'
+    steps:
+    - uses: actions/checkout@v2
+    - run: ./deploy.sh
+
+11.
+name: Skip Step
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: ./build.sh
+          if: github.ref == 'refs/heads/master'
+    - run: echo "Hello!"
+
+
+12.
+name: Build matrix
+
+on: push
+
+jobs:
+  matrix:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: [8, 10, 12]
+        component: [frontend, backend]
+    steps:
+    - run: ./build.sh --version=${{ matrix.version }} ${{ matrix.component }}
+
+
+13.
+name: Matrix runs-on
+
+on: push
+
+jobs:
+  matrix:
+      runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+    - run: echo "Should run on '${{ matrix.os }}'
+
