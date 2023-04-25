@@ -16,5 +16,9 @@ public function resta(){
     return $this->num1-$this->num2;
     }
 
+public function multiplicacion(){
+    return $this->num1*$this->num2;
+    }
+
 }
 ?>
